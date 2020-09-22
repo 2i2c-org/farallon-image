@@ -1,29 +1,44 @@
 channels:
   - conda-forge
 dependencies:
-  # for jupyter-desktop-server
-  - websockify
-
   # language runtimes
   - python=3.8.*
 
-  - numpy
-  - scipy
-  - matplotlib
-  - pandas
-  - seaborn
-  - sympy
-  - networkx
-  - scikit-learn
   - beautifulsoup4
-  - statsmodels
-  - nltk
-  - spacy
-  - geopandas
-  # From https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/29
-  - astroquery
-  - astropy
-  - galpy
+  - boto3
+  - botocore
+  - bottleneck
+  - cartopy
+  - cdsapi
+  - cmip6_preprocessing
+  - dask
+  - distributed
+  - esmf
+  - ffmpeg
+  - fsspec
+  - gcsfs
+  - h5py
+  - iris
+  - lxml
+  - matplotlib
+  - metpy
+  - netcdf4
+  - numpy
+  - opendrift
+  - pandas
+  - pvlib
+  - s3fs
+  - s3fs
+  - satpy
+  - scikit-learn
+  - scipy
+  - seaborn
+  - seawater
+  - siphon
+  - tables
+  - xarray
+  - xesmf
+  - zarr
 
   - pip
 
@@ -41,11 +56,5 @@ dependencies:
     - notebook==6.1.4
     - jupyterhub==1.1.0
     - jupyter-server-proxy==1.5.0
-    - jupyter-rsession-proxy==1.2
     - jupyter-tree-download==1.0.1
     - ipywidgets==7.5.1
-
-    - datascience
-    - geojson
-    - folium
-    - geopy
