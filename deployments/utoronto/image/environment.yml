@@ -58,3 +58,4 @@ dependencies:
     - jupyter-server-proxy==1.5.0
     - jupyter-tree-download==1.0.1
     - ipywidgets==7.5.1
+    - dask-labextension==3.0.0
