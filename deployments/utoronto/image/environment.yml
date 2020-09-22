@@ -11,8 +11,6 @@ dependencies:
   - cartopy
   - cdsapi
   - cmip6_preprocessing
-  - dask
-  - distributed
   - esmf
   - ffmpeg
   - fsspec
@@ -39,6 +37,11 @@ dependencies:
   - xarray
   - xesmf
   - zarr
+  # Let's make sure that dask-versions match between here & dask gateway
+  - dask==2.27.0
+  - distributed==2.27.0
+  - dask-gateway==0.8.0
+  - dask-kubernetes==0.10.1
 
   - pip
 
