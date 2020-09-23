@@ -37,13 +37,6 @@ jupyterhub:
   auth:
     state:
       enabled: True
-    admin:
-      users:
-        - yuvipanda@gmail.com
-        - choldgraf@gmail.com
-    type: azuread
-    google:
-      loginService: "University of Toronto ID"
   proxy:
     nodeSelector:
       hub.jupyter.org/pool-name: core-pool
