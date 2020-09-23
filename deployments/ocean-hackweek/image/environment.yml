@@ -22,10 +22,9 @@ dependencies:
   - metpy
   - netcdf4
   - numpy
-  - opendrift
+  # - opendrift
   - pandas
-  - pvlib
-  - s3fs
+  - pvlib-python
   - s3fs
   - satpy
   - scikit-learn
@@ -33,7 +32,7 @@ dependencies:
   - seaborn
   - seawater
   - siphon
-  - tables
+  - pytables
   - xarray
   - xesmf
   - zarr
@@ -62,3 +61,5 @@ dependencies:
     - jupyter-tree-download==1.0.1
     - ipywidgets==7.5.1
     - dask-labextension==3.0.0
+
+    - git+https://github.com/trondkr/xESMF.git@27952e1ab2f1b7b23c443953b9d1e079376efb08
