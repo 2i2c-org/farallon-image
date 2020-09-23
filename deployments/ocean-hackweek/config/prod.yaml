@@ -4,11 +4,7 @@ jupyterhub:
       pvc:
         # This gonna store logs
         storage: 10Gi
-  auth:
-    google:
-      callbackUrl: "https://utoronto.2i2c.cloud/hub/oauth_callback"
   proxy:
     https:
       hosts:
-      - utoronto.2i2c.cloud
-      - jupyter.utoronto.ca
+      - ohw.pangeo.2i2c.cloud

@@ -1,13 +1,11 @@
 jupyterhub:
   auth:
-    google:
-      callbackUrl: "https://staging.utoronto.2i2c.cloud/hub/oauth_callback"
+    type: dummy
   proxy:
     https:
       hosts:
-      - staging.utoronto.2i2c.cloud
+      - staging.ohw.pangeo.2i2c.cloud
 
   prePuller:
     continuous:
-      # Don't need continuous pre-puller on staging
       enabled: false
