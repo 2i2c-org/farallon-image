@@ -1,0 +1,42 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: test-cluster
+  region: us-east-2
+
+nodeGroups:
+  - name: core-nodes-2020-09-22
+    instanceType: m5.large
+    minSize: 1
+    maxSize: 5
+    desiredCapacity: 1
+    volumeSize: 80
+    labels:
+      hub.jupyter.org/pool-name: core-pool
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/pool-name: core-pool
+    availabilityZones:
+      - us-east-2a
+    ssh:
+      allow: true
+      publicKeyPath: ~/.ssh/do-the-work.pub
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        ebs: true
+  - name: user-pool-2020-09-22-1
+    instanceType: m5.large
+    minSize: 1
+    maxSize: 100
+    desiredCapacity: 1
+    volumeSize: 150
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/pool-name: user-pool
+    labels:
+      hub.jupyter.org/pool-name: user-pool
+    availabilityZones:
+      - us-east-2a
+    ssh:
+      allow: true
+      publicKeyPath: ~/.ssh/do-the-work.pub
