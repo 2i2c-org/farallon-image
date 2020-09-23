@@ -1,5 +1,5 @@
 images:
-  image_name: 677861182063.dkr.ecr.us-east-2.amazonaws.com/2i2c-hub
+  image_name: 677861182063.dkr.ecr.us-east-2.amazonaws.com/2i2c-hub/user-image
   registry:
     provider: dockerconfig
     dockerconfig:
