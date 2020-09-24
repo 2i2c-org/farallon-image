@@ -1,3 +1,15 @@
+cluster-autoscaler-chart:
+  rbac:
+    create: true
+
+  cloudProvider: aws
+  awsRegion: us-east-2
+
+  autoDiscovery:
+    # Match this with name in aws/eksctl-config.yaml
+    clusterName: pangeo-2i2c-cluster
+    enabled: true
+
 prometheus:
   networkPolicy:
     enabled: true

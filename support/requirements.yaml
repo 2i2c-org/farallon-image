@@ -5,3 +5,6 @@ dependencies:
  - name: grafana
    version: 5.6.4
    repository: https://grafana.github.io/helm-charts
+ - name: cluster-autoscaler-chart
+   version: 1.0.3
+   repository: https://kubernetes.github.io/autoscaler
