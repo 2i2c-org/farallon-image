@@ -9,17 +9,17 @@ jupyterhub:
   singleuser:
     profileList:
       - display_name: "Default: m4.xlarge"
-        description: "3.8CPUs & 15GB RAM"
+        description: "~4CPUs & ~15GB RAM"
         kubespawner_override:
-          mem_guarantee: 15G
-          cpu_guarantee: 3.8
+          mem_guarantee: 14G
+          cpu_guarantee: 3
           node_selector:
             jupyterhub-pool-name: user-pool-m4-xlarge
       - display_name: "Default: m4.2xlarge"
-        description: "7.8CPUs & 31GB RAM"
+        description: "~8CPUs & ~31GB RAM"
         kubespawner_override:
-          mem_guarantee: 31G
-          cpu_guarantee: 7.8
+          mem_guarantee: 30G
+          cpu_guarantee: 7
           node_selector:
             jupyterhub-pool-name: user-pool-m4-2xlarge
     workingDir: /home/jovyan
