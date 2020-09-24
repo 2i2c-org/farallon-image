@@ -33,7 +33,7 @@ jupyterhub:
       enabled: True
   proxy:
     nodeSelector:
-      hub.jupyter.org/pool-name: core-pool
+      jupyterhub-pool-name: core-pool
     chp:
       resources:
         requests:
@@ -52,7 +52,7 @@ jupyterhub:
     readinessProbe:
       enabled: false
     nodeSelector:
-      hub.jupyter.org/pool-name: core-pool
+      jupyterhub-pool-name: core-pool
     initContainers:
       - name: templates-clone
         image: alpine/git
