@@ -7,12 +7,24 @@ jupyterhub:
       letsencrypt:
         contactEmail: yuvipanda@gmail.com
   singleuser:
+    profileList:
+      - display_name: "Default: m4.xlarge"
+        description: "3.8CPUs & 15GB RAM"
+        kubespawner_override:
+          mem_guarantee: 15G
+          cpu_guarantee: 3.8
+          node_selector:
+            jupyterhub-pool-name: user-pool-m4-xlarge
+      - display_name: "Default: m4.2xlarge"
+        description: "7.8CPUs & 31GB RAM"
+        kubespawner_override:
+          mem_guarantee: 31G
+          cpu_guarantee: 7.8
+          node_selector:
+            jupyterhub-pool-name: user-pool-m4-2xlarge
     workingDir: /home/jovyan
     storage:
       type: static
       static:
         pvcName: home-nfs
         subPath: "homes/{username}"
-    memory:
-      guarantee: 512M
-      limit: 2G
