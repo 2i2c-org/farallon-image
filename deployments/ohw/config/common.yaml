@@ -24,7 +24,7 @@ jupyterhub:
             jupyterhub-pool-name: user-pool-m4-2xlarge
     workingDir: /home/jovyan
     storage:
-      type: static
+      type: none
       static:
         pvcName: home-nfs
         subPath: "homes/{username}"
