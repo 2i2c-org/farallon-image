@@ -21,6 +21,8 @@ jupyterhub:
     state:
       enabled: True
   proxy:
+    https:
+      enabled: true
     nodeSelector:
       jupyterhub-pool-name: core-pool
     chp:
