@@ -40,6 +40,7 @@ jupyterhub:
         limits:
           memory: 512Mi
   hub:
+    allowNamedServers: true
     readinessProbe:
       enabled: false
     nodeSelector:
