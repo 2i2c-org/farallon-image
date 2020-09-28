@@ -1,8 +1,10 @@
 channels:
   - conda-forge
+
 dependencies:
   # language runtimes
   - python=3.8.*
+  - nodejs=14.8.*
 
   - beautifulsoup4
   - boto3
