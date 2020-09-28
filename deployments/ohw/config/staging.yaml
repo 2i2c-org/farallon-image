@@ -1,6 +1,4 @@
 jupyterhub:
-  auth:
-    type: dummy
   proxy:
     https:
       hosts:
