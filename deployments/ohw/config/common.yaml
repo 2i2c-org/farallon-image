@@ -1,6 +1,14 @@
+nfsPVC:
+  enabled: true
+  nfs:
+    serverIP: fs-7b129903.efs.us-east-2.amazonaws.com
+    shareName: ""
+
 jupyterhub:
   auth:
     type: github
+    dummy:
+      password: watwatwat
   proxy:
     https:
       enabled: true
@@ -23,8 +31,18 @@ jupyterhub:
           node_selector:
             jupyterhub-pool-name: user-pool-m4-2xlarge
     workingDir: /home/jovyan
+    initContainers:
+      - name: volume-mount-hack
+        image: busybox
+        command: ["sh", "-c", "id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan"]
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: home
+          mountPath: /home/jovyan
+          subPath: "homes/ohw/{username}"
     storage:
-      type: none
+      type: static
       static:
         pvcName: home-nfs
-        subPath: "homes/{username}"
+        subPath: "homes/ohw/{username}"
