@@ -1,14 +1,3 @@
-etcJupyter:
-  # Options for Jupyter Notebook itself, set for each user
-  jupyter_notebook_config.json: {}
-
-nfsPVC:
-  enabled: true
-  # If you want a PVC with NFS that can be used to mount home directories
-  nfs:
-    serverIP: jupyterhub-2i2c-nfs-vm
-    shareName: /export/jupyterhub-2i2c-nfs-data-disk-1
-
 jupyterhub:
   cull:
     # Cull only every 30min, not 10
