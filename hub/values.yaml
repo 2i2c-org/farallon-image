@@ -1,137 +1,215 @@
-jupyterhub:
-  cull:
-    # Cull only every 30min, not 10
-    every: 1800
-    # Don't hit the hub API too hard
-    concurrency: 1
-  prePuller:
-    resources:
-      requests:
-        cpu: 0.0001
-        memory: 16Mi
-      # Prepuller memoryl imit was too low, so the pods were getting killed constantly
-      # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/pull/1764#discussion_r487839915
-      limits:
-        cpu: 0.0001
-        memory: 32Mi
-  debug:
-    enabled: false
-
-  auth:
-    state:
-      enabled: True
-  proxy:
-    https:
-      enabled: true
-    nodeSelector:
-      jupyterhub-pool-name: core-pool
-    chp:
+daskhub:
+  jupyterhub:
+    singleuser:
+      extraEnv:
+        # The default worker image matches the singleuser image.
+        DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
+    cull:
+      # Cull only every 30min, not 10
+      every: 1800
+      # Don't hit the hub API too hard
+      concurrency: 1
+    prePuller:
+      hook:
+        enabled: false
       resources:
         requests:
-          cpu: 0.001
-          memory: 128Mi
+          cpu: 0.0001
+          memory: 16Mi
         limits:
-          memory: 512Mi
-    traefik:
-      resources:
-        requests:
-          cpu: 0.001
-          memory: 256Mi
-        limits:
-          memory: 512Mi
-  hub:
-    allowNamedServers: true
-    readinessProbe:
+          cpu: 0.0001
+          memory: 32Mi
+    debug:
       enabled: false
-    nodeSelector:
-      jupyterhub-pool-name: core-pool
-    initContainers:
-      - name: templates-clone
-        image: alpine/git
-        args:
-          - clone
-          - --depth=1
-          - --single-branch
-          - --
-          - https://github.com/2i2c-utoronto/homepage
-          - /srv/repo
-        securityContext:
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-        volumeMounts:
-          - name: custom-templates
-            mountPath: /srv/repo
-    extraContainers:
-      # Keep templates in sync, so you can autodeploy from master
-      - name: templates-sync
-        image: alpine/git
-        workingDir: /srv/repo
-        command:
-          - /bin/sh
-        args:
-          - -c
-          # Do git reset --hard origin/master so we aren't confused by force pushes
-          - "while true; do git fetch origin; git reset --hard origin/master; sleep\
-            \ 5m; done"
-        securityContext:
-          runAsUser: 1000
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-        volumeMounts:
-          - name: custom-templates
-            mountPath: /srv/repo
-    extraVolumes:
-      - name: custom-templates
-        emptyDir: {}
-    extraVolumeMounts:
-      - mountPath: /usr/local/share/jupyterhub/custom_templates
-        name: custom-templates
-        subPath: "templates"
-      - mountPath: /usr/local/share/jupyterhub/static/extra-assets
-        name: custom-templates
-        subPath: "extra-assets"
-    resources:
-      requests:
-        cpu: 0.001
-        memory: 512Mi
-      limits:
-        memory: 2Gi
-    extraConfig:
-      01-working-dir: |
-        # Make sure working directory is ${HOME}
-        # hubploy has a bug where it unconditionally puts workingdir to be /srv/repo
-        c.KubeSpawner.working_dir = '/home/jovyan'
-      02-prometheus: |
-        # Allow unauthenticated prometheus requests
-        # Otherwise our prometheus server can't get to these
-        c.JupyterHub.authenticate_prometheus = False
-      03-no-setuid: |
-        # Disable 'sudo' & similar binaries, regardless of image contents
-        c.KubeSpawner.extra_container_config = {
-          'securityContext': {
-            # Explicitly disallow setuid binaries from working inside the container
-            'allowPrivilegeEscalation': False
-          }
-        }
-      # 04-custom-theme: |
-      #   c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
 
-  scheduling:
-    userScheduler:
+    auth:
+      state:
+        enabled: True
+    proxy:
+      https:
+        enabled: true
       nodeSelector:
         jupyterhub-pool-name: core-pool
-      # FIXME: I *think* this makes user spawns much slower, need to validate
-      enabled: false
+      chp:
+        resources:
+          requests:
+            cpu: 0.001
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+      traefik:
+        resources:
+          requests:
+            cpu: 0.001
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+    hub:
+      allowNamedServers: true
+      readinessProbe:
+        enabled: false
+      nodeSelector:
+        jupyterhub-pool-name: core-pool
+      initContainers:
+        - name: templates-clone
+          image: alpine/git
+          args:
+            - clone
+            - --depth=1
+            - --single-branch
+            - --
+            - https://github.com/2i2c-utoronto/homepage
+            - /srv/repo
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: custom-templates
+              mountPath: /srv/repo
+      extraContainers:
+        # Keep templates in sync, so you can autodeploy from master
+        - name: templates-sync
+          image: alpine/git
+          workingDir: /srv/repo
+          command:
+            - /bin/sh
+          args:
+            - -c
+            # Do git reset --hard origin/master so we aren't confused by force pushes
+            - "while true; do git fetch origin; git reset --hard origin/master; sleep\
+              \ 5m; done"
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: custom-templates
+              mountPath: /srv/repo
+      extraVolumes:
+        - name: custom-templates
+          emptyDir: {}
+      extraVolumeMounts:
+        - mountPath: /usr/local/share/jupyterhub/custom_templates
+          name: custom-templates
+          subPath: "templates"
+        - mountPath: /usr/local/share/jupyterhub/static/extra-assets
+          name: custom-templates
+          subPath: "extra-assets"
       resources:
         requests:
-          cpu: 0.01
+          cpu: 0.001
           memory: 512Mi
         limits:
-          memory: 512Mi
+          memory: 2Gi
+      extraConfig:
+        01-working-dir: |
+          # Make sure working directory is ${HOME}
+          # hubploy has a bug where it unconditionally puts workingdir to be /srv/repo
+          c.KubeSpawner.working_dir = '/home/jovyan'
+        02-prometheus: |
+          # Allow unauthenticated prometheus requests
+          # Otherwise our prometheus server can't get to these
+          c.JupyterHub.authenticate_prometheus = False
+        03-no-setuid: |
+          # Disable 'sudo' & similar binaries, regardless of image contents
+          c.KubeSpawner.extra_container_config = {
+            'securityContext': {
+              # Explicitly disallow setuid binaries from working inside the container
+              'allowPrivilegeEscalation': False
+            }
+          }
+        # 04-custom-theme: |
+        #   c.JupyterHub.template_paths = ['/usr/local/share/jupyterhub/custom_templates/']
 
-    podPriority:
-      enabled: true
-    userPlaceholder:
-      enabled: false
-      replicas: 100
+    scheduling:
+      userScheduler:
+        nodeSelector:
+          jupyterhub-pool-name: core-pool
+        # FIXME: I *think* this makes user spawns much slower, need to validate
+        enabled: false
+        resources:
+          requests:
+            cpu: 0.01
+            memory: 512Mi
+          limits:
+            memory: 512Mi
+
+      podPriority:
+        enabled: true
+      userPlaceholder:
+        enabled: false
+        replicas: 100
+
+  dask-gateway:
+    gateway:
+      backend:
+        scheduler:
+          cores:
+            request: 0.01
+            limit: 1
+          memory:
+            request: 128M
+            limit: 1G
+          extraPodConfig:
+            tolerations:
+              - key: "k8s.dask.org/dedicated"
+                operator: "Equal"
+                value: "scheduler"
+                effect: "NoSchedule"
+              - key: "k8s.dask.org_dedicated"
+                operator: "Equal"
+                value: "scheduler"
+                effect: "NoSchedule"
+        worker:
+          extraContainerConfig:
+            securityContext:
+              runAsGroup: 1000
+              runAsUser: 1000
+          extraPodConfig:
+            securityContext:
+              fsGroup: 1000
+            nodeSelector:
+              dask-pool-name: worker-2xlarge
+            tolerations:
+              - key: "dask-dedicated"
+                operator: "Equal"
+                value: "worker"
+                effect: "NoSchedule"
+
+        # TODO: figure out a replacement for userLimits.
+      extraConfig:
+        optionHandler: |
+          from dask_gateway_server.options import Options, Integer, Float, String
+          def cluster_options(user):
+             def option_handler(options):
+                 if ":" not in options.image:
+                     raise ValueError("When specifying an image you must also provide a tag")
+                 extra_annotations = {
+                     "hub.jupyter.org/username": user.name,
+                     "prometheus.io/scrape": "true",
+                     "prometheus.io/port": "8787",
+                 }
+                 extra_labels = {
+                     "hub.jupyter.org/username": user.name,
+                 }
+                 return {
+                     "worker_cores_limit": options.worker_cores,
+                     "worker_cores": min(options.worker_cores / 2, 1),
+                     "worker_memory": "%fG" % options.worker_memory,
+                     "image": options.image,
+                     "scheduler_extra_pod_annotations": extra_annotations,
+                     "worker_extra_pod_annotations": extra_annotations,
+                     "scheduler_extra_pod_labels": extra_labels,
+                     "worker_extra_pod_labels": extra_labels,
+                 }
+             return Options(
+                 Integer("worker_cores", 2, min=1, max=16, label="Worker Cores"),
+                 Float("worker_memory", 4, min=1, max=32, label="Worker Memory (GiB)"),
+                 String("image", default="pangeo/pangeo-notebook:latest", label="Image"),
+                 handler=option_handler,
+             )
+          c.Backend.cluster_options = cluster_options
+        idle: |
+          # timeout after 30 minutes of inactivity
+          c.KubeClusterConfig.idle_timeout = 1800

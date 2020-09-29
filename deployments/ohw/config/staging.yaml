@@ -1,9 +1,10 @@
-jupyterhub:
-  proxy:
-    https:
-      hosts:
-      - staging.ohw.pangeo.2i2c.cloud
+daskhub:
+  jupyterhub:
+    proxy:
+      https:
+        hosts:
+        - staging.ohw.pangeo.2i2c.cloud
 
-  prePuller:
-    continuous:
-      enabled: false
+    prePuller:
+      continuous:
+        enabled: false

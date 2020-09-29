@@ -1,5 +1,4 @@
 dependencies:
- - name: jupyterhub
-   # Let's run as close to master as possible
-   version: v0.9.0-n233.hcd1eff7a
-   repository: https://jupyterhub.github.io/helm-chart
+  - name: daskhub
+    version: "4.4.2"
+    repository: https://helm.dask.org
