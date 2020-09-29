@@ -42,7 +42,6 @@ dependencies:
   - descartes
   - rioxarray
   - nc-time-axis
-  - salem
   # Let's make sure that dask-versions match between here & dask gateway
   - dask==2.27.0
   - distributed==2.27.0
@@ -69,4 +68,6 @@ dependencies:
     - ipywidgets==7.5.1
     - dask-labextension==3.0.0
 
+    # Science things. Prefer conda for these if possible
     - git+https://github.com/trondkr/xESMF.git@27952e1ab2f1b7b23c443953b9d1e079376efb08
+    - salem==0.3.0
