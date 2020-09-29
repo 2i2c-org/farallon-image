@@ -38,6 +38,11 @@ dependencies:
   - xarray
   - xesmf
   - zarr
+  - geopandas
+  - descartes
+  - rioxarray
+  - nc-time-axis
+  - salem
   # Let's make sure that dask-versions match between here & dask gateway
   - dask==2.27.0
   - distributed==2.27.0
