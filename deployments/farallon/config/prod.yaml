@@ -8,4 +8,4 @@ daskhub:
     proxy:
       https:
         hosts:
-        - ohw.pangeo.2i2c.cloud
+        - farallon.2i2c.cloud

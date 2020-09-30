@@ -12,6 +12,9 @@ daskhub:
     prePuller:
       hook:
         enabled: false
+      # Takes up pod space, and isn't actually useful
+      continuous:
+        enabled: false
       resources:
         requests:
           cpu: 0.0001

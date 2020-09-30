@@ -2,10 +2,5 @@ daskhub:
   jupyterhub:
     proxy:
       https:
-        enabled: false
-        # hosts:
-        # - staging.ohw.pangeo.2i2c.cloud
-
-    prePuller:
-      continuous:
-        enabled: false
+        hosts:
+        - staging.farallon.2i2c.cloud

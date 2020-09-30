@@ -4,7 +4,3 @@ daskhub:
       https:
         hosts:
         - staging.ohw.pangeo.2i2c.cloud
-
-    prePuller:
-      continuous:
-        enabled: false
