@@ -1,5 +1,8 @@
 # Things we have learnt so far
 # 1. Don't use anything other than -, _, alphanum (and maybe .) in node labels / taints
+# 2. EKS' CNI sucks for our use case. https://github.com/awslabs/amazon-eks-ami/blob/master/files/eni-max-pods.txt
+#    has number of pods supported per node, and on large instances that's as low as 28.
+#    SIGH. Remember this when making nodes
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
