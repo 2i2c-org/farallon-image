@@ -12,6 +12,26 @@ metadata:
   region: us-east-2
 
 nodeGroups:
+  - name: core-pool-2020-09-30
+    # m5.large gives us only 28 pods, is too small :'(
+    instanceType: m5.xlarge
+    minSize: 1
+    maxSize: 5
+    desiredCapacity: 1
+    volumeSize: 80
+    labels:
+      jupyterhub-pool-name: core-pool
+    tags:
+      k8s.io/cluster-autoscaler/node-template/label/jupyterhub-pool-name: core-pool
+    availabilityZones:
+      - us-east-2a
+    ssh:
+      allow: true
+      publicKeyPath: secrets/ssh-key.pub
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        ebs: true
   - name: core-pool-2020-09-23
     instanceType: m5.large
     minSize: 1
