@@ -1,6 +1,21 @@
 daskhub:
   jupyterhub:
     singleuser:
+      profileList:
+        - display_name: "Default: m5.xlarge"
+          description: "~4CPUs & ~15GB RAM"
+          kubespawner_override:
+            mem_guarantee: 14G
+            cpu_guarantee: 3
+            node_selector:
+              jupyterhub-pool-name: user-pool-m5-xlarge
+        - display_name: "Default: m5.2xlarge"
+          description: "~8CPUs & ~31GB RAM"
+          kubespawner_override:
+            mem_guarantee: 30G
+            cpu_guarantee: 7
+            node_selector:
+              jupyterhub-pool-name: user-pool-m5-2xlarge
       extraEnv:
         # The default worker image matches the singleuser image.
         DASK_GATEWAY__CLUSTER__OPTIONS__IMAGE: '{JUPYTER_IMAGE_SPEC}'
