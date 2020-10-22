@@ -2,6 +2,8 @@ daskhub:
   jupyterhub:
     singleuser:
       profileList:
+        # The mem-guarantees are here so k8s doesn't schedule other pods
+        # on these nodes.
         - display_name: "Default: m5.xlarge"
           description: "~4CPUs & ~15GB RAM"
           kubespawner_override:
@@ -10,9 +12,9 @@ daskhub:
             node_selector:
               jupyterhub-pool-name: user-pool-m5-xlarge
         - display_name: "Default: m5.2xlarge"
-          description: "~8CPUs & ~31GB RAM"
+          description: "~8CPUs & ~30GB RAM"
           kubespawner_override:
-            mem_guarantee: 30G
+            mem_guarantee: 28G
             cpu_guarantee: 7
             node_selector:
               jupyterhub-pool-name: user-pool-m5-2xlarge
