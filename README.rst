@@ -232,12 +232,12 @@ file: ``<deployments/<hub-image>/image/install.R``
 
 3. Pin every package to their current versions, available on the
 `R Studio package manager <https://packagemanager.rstudio.com/client/#/repos/1/packages>`_
-or to a specific wanted version.
-If the package is only available on Cran, pin to a GitHub commit hash.
+or to a specific wanted version. If the package is only available on Cran, pin to a GitHub commit hash.
 
-4. Build the Docker image locally and make sure everything is ok:
+4. Build the Docker image locally and make sure everything is ok.
 
-..code:: bash
+.. code:: bash
+
    docker build . inside the image directory
 
 5. Commit the changes on GitHub, for ``hubploy build <hub-name> --push --check-registry`` to work,
@@ -254,42 +254,48 @@ Deploy changes to the hub
 
 2. Make sure you have the right gcloud project set:
 
-..code:: bash
+.. code:: bash
+
    gcloud config set project <project>
 
 3. Get the user access credentials used by hubploy and `sops GCP KMS <https://github.com/mozilla/sops#22encrypting-using-gcp-kms>`_:
 
-..code:: bash
+.. code:: bash
+
    gcloud auth application-default login
 
 4. Retrieve the authentication token and pass it to the docker login command to authenticate to the Amazon ECR registry.
 When retrieving the password, ensure that you specify the same region that your Amazon ECR registry exists in.
 
-..code:: bash
+.. code:: bash
+
    aws ecr get-login-password --region <amazon-ECR-registry-region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<amazon-ECR-registry-region>.amazonaws.com
 
 5. Build and push the Docker image with `hubploy`:
 
-..code:: bash
+.. code:: bash
+
    hubploy build ohw --check-registry --push
 
 6. Authenticate into the cluster:
 
-..code:: bash
+.. code:: bash
+
    aws eks update-kubeconfig --name=<cluster-name>
 
 7. Deploy the changes to the staging hub and make sure everything works as expected:
 
-..code:: bash
+.. code:: bash
+
    hubploy deploy <hub-name> hub staging
 
-..note::
-   Make sure your IAM role has enough persmissions to deploy. Check with the cluster admin if
-   a `401 Unautorized` error appers when deploying.
+**Note**: Make sure your IAM role has enough persmissions to deploy. Check with the cluster admin if
+a `401 Unautorized` error appers when deploying.
 
 8. Deploy the changes to the production hub:
 
-..code:: bash
+.. code:: bash
+
    hubploy deploy ohw hub prod
 
 TODO
