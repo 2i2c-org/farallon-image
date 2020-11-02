@@ -220,62 +220,76 @@ Install additional R packages
 -----------------------------
 1. The current list of existing clusters use `repo2docker`_ to build the Docker
 image. In order to install new R packages, add them to their corespondig configuration
-file: `<deployments/<hub-image>/image/install.R`
+file: ``<deployments/<hub-image>/image/install.R``
 
-2. The packages listed in the `install.R` file are installed using
+2. The packages listed in the ``install.R`` file are installed using
 `devtools <https://www.r-project.org/nosvn/pandoc/devtools.html>`_.
-   - Add the pkgs available on `Cran <https://cran.r-project.org/>`_ to the `cran_packages`
-     list, that are installed through `devtools::install_version`.
-   - Add the pkgs that are only available on GitHub to the `github_packages` list,
-     that are installed through `devtools::install_github`.
 
-2. Pin every package to their current versions, available on the
-   `R Studio package manager <https://packagemanager.rstudio.com/client/#/repos/1/packages>`_
-   or to the specific version wanted.
-   If the package is only available on Cran, pin to a GitHub commit hash.
+- Add the pkgs available on `Cran <https://cran.r-project.org/>`_ to the `cran_packages`
+  list, that are installed through ``devtools::install_version``.
+- Add the pkgs that are only available on GitHub to the `github_packages` list,
+  that are installed through ``devtools::install_github``.
 
-3. Build the Docker image locally and make sure everything is ok:
-..code::
+3. Pin every package to their current versions, available on the
+`R Studio package manager <https://packagemanager.rstudio.com/client/#/repos/1/packages>`_
+or to a specific wanted version.
+If the package is only available on Cran, pin to a GitHub commit hash.
+
+4. Build the Docker image locally and make sure everything is ok:
+
+..code:: bash
    docker build . inside the image directory
 
-4. Commit the changes on GitHub, for ``hubploy build <hub-name> --push --check-registry`` to work,
-   since the commit hash is used as the image tag.
+5. Commit the changes on GitHub, for ``hubploy build <hub-name> --push --check-registry`` to work,
+since the commit hash is used as the image tag.
 
 Deploy changes to the hub
 -------------------------
 1. Make sure you have the following packages installed and configured:
+
    - `sops <https://github.com/mozilla/sops/releases>`_
    - `gcloud <https://cloud.google.com/sdk/docs/install>`_
    - `aws CLI <https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html>`_
    - `hubploy <https://github.com/yuvipanda/hubploy>`_
 
 2. Make sure you have the right gcloud project set:
-..code::
+
+..code:: bash
    gcloud config set project <project>
 
 3. Get the user access credentials used by hubploy and `sops GCP KMS <https://github.com/mozilla/sops#22encrypting-using-gcp-kms>`_:
-..code::
+
+..code:: bash
    gcloud auth application-default login
 
 4. Retrieve the authentication token and pass it to the docker login command to authenticate to the Amazon ECR registry.
 When retrieving the password, ensure that you specify the same region that your Amazon ECR registry exists in.
-..code::
+
+..code:: bash
    aws ecr get-login-password --region <amazon-ECR-registry-region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<amazon-ECR-registry-region>.amazonaws.com
 
 5. Build and push the Docker image with `hubploy`:
-..code::
+
+..code:: bash
    hubploy build ohw --check-registry --push
 
 6. Authenticate into the cluster:
-..code::
+
+..code:: bash
    aws eks update-kubeconfig --name=<cluster-name>
 
 7. Deploy the changes to the staging hub and make sure everything works as expected:
-..code::
+
+..code:: bash
    hubploy deploy <hub-name> hub staging
 
+..note::
+   Make sure your IAM role has enough persmissions to deploy. Check with the cluster admin if
+   a `401 Unautorized` error appers when deploying.
+
 8. Deploy the changes to the production hub:
-..code::
+
+..code:: bash
    hubploy deploy ohw hub prod
 
 TODO
