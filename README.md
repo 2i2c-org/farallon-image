@@ -32,7 +32,7 @@ file: `<deployments/<hub-image>/image/install.R`
 
 3. Pin every package to their current versions, available on the
 [R Studio package manager](https://packagemanager.rstudio.com/client/#/repos/1/packages)
-or to a specific wanted version. If the package is only available on Cran, pin to a GitHub commit hash.
+or to a specific wanted version. If the package is only available on GitHub, pin to a GitHub commit hash.
 
 4. Build the Docker image locally and make sure everything is ok.
 
