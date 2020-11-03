@@ -1,6 +1,11 @@
-daskhub:
-  jupyterhub-ssh:
+jupyterhub-ssh:
     hubUrl: https://staging.ohw.pangeo.2i2c.cloud
+    ssh:
+      service:
+        type: LoadBalancer
+    sftp:
+      enabled: False
+daskhub:
   jupyterhub:
     proxy:
       https:

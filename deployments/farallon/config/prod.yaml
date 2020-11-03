@@ -1,6 +1,6 @@
+jupyterhub-ssh:
+  hubUrl: https://farallon.2i2c.cloud
 daskhub:
-  jupyterhub-ssh:
-    hubUrl: https://farallon.2i2c.cloud
   jupyterhub:
     hub:
       db:
