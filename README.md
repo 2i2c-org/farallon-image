@@ -16,7 +16,6 @@ Make sure you have the following packages installed and configured:
    - [hubploy](https://github.com/yuvipanda/hubploy)
    - [docker](https://docs.docker.com/install/)
 
-
 ### Step 1: Install additional R packages
 
 1. The current list of existing clusters use `repo2docker` to build the Docker
@@ -26,7 +25,7 @@ file: `<deployments/<hub-image>/image/install.R`
 2. The packages listed in the `install.R` file are installed using
 [devtools](https://www.r-project.org/nosvn/pandoc/devtools.html)
 
-- Add the pkgs available on [Cran](https://cran.r-project.org)to the `cran_packages`
+- Add the pkgs available on [Cran](https://cran.r-project.org) to the `cran_packages`
   list. These packages will be installed using `devtools::install_version`.
 - Add the pkgs that are only available on GitHub to the `github_packages` list/
   These packages will be installed using `devtools::install_github`.
@@ -96,5 +95,5 @@ since the commit hash is used as the image tag.
 8. Deploy the changes to the **production** hub:
 
    ```bash
-      hubploy deploy ohw hub prod
+      hubploy deploy <hub-name> hub prod
    ```
