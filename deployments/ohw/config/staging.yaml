@@ -2,7 +2,7 @@ jupyterhub-ssh:
     hubUrl: https://staging.ohw.pangeo.2i2c.cloud
     ssh:
       service:
-        type: LoadBalancer
+        type: ClusterIP
     sftp:
       enabled: False
 daskhub:
