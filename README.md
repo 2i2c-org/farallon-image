@@ -40,7 +40,7 @@ or to a specific wanted version. If the package is only available on GitHub, pin
       docker build . inside the image directory
    ```
 
-5. Commit the changes on GitHub, for `hubploy build <hub-name> --push --check-registry` to work,
+5. Commit the changes to git, for `hubploy build <hub-name> --push --check-registry` to work,
 since the commit hash is used as the image tag.
 
 ### Step 2: Deploy the changes to the hub
