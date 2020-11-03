@@ -1,4 +1,6 @@
 daskhub:
+  jupyterhub-ssh:
+    hubUrl: https://staging.farallon.2i2c.cloud
   jupyterhub:
     proxy:
       https:

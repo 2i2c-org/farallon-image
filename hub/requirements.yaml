@@ -2,3 +2,6 @@ dependencies:
   - name: daskhub
     version: "4.4.2"
     repository: https://helm.dask.org
+  - name: jupyterhub-ssh
+    version: 0.0.1-n062.h2759fb4
+    repository: https://yuvipanda.github.io/jupyterhub-ssh/
