@@ -112,9 +112,7 @@ should be replicable for others.
    ```bash
    git clone https://github.com/dask/helm-chart.git
    git checkout master
-2. Inside the `yaml` file holding the dependencies, add the local path to the helm-chart of the project
-you just checked out and use the version inside the `chart.yaml` or run `chartpress` to generate one if
-that is not available:
+2. Reference the version of the unpackaged Helm chart (of the locally cloned git repository) in the dependencies `yaml` file of your project (either `requirements.yaml` or `Chart.yaml`). This version should be available in the`Chart.yaml` file (of the cloned repository). If the version is set to be a placeholder or outdated, it may be because it is maintained using `chartpress`, then run `chartpress` in that repository first to update it.
 
    *DaskHub example:*
 
