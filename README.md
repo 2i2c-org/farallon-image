@@ -131,8 +131,8 @@ just cloned changes.
       *DaskHub example:*
 
       ```bash
-         # from inside the dask/helm-chart checkout
-         helm dep up daskhub
+      # from inside the dask/helm-chart checkout
+      helm dep up daskhub
       ```
 
 4. Deploy the changes.
