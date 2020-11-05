@@ -126,11 +126,8 @@ that is not available:
          version: <version-from-chart.yaml-of-daskhub>
    ```
 
-3. Deploy the changes.
-
-   **Note** If after deploying these changes some of the services don't show up and they are part of projects that
-   are listed as dependencies of the project, this might mean they haven't been 'fetched' properly and you
-   should do that manually.
+3. Run an update any time the dependencies (in `requirements.yaml` or `Chart.yaml`) of the chart you
+just cloned changes.
 
       *DaskHub example:*
 
@@ -138,3 +135,5 @@ that is not available:
          # from inside the dask/helm-chart checkout
          helm dep up daskhub
       ```
+
+4. Deploy the changes.
