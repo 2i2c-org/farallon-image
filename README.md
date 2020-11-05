@@ -118,11 +118,11 @@ that is not available:
 
    *DaskHub example:*
 
-   ```bash
-      dependencies:
-       - name: daskhub
-         repository: file://<path-to-your-daskhub-checkout>/daskhub
-         version: <version-from-chart.yaml-of-daskhub>
+   ```yaml
+   dependencies:
+     - name: daskhub
+       repository: file://<path-to-your-daskhub-checkout>/daskhub
+       version: <version-from-chart.yaml-of-daskhub>
    ```
 
 3. Run an update any time the dependencies (in `requirements.yaml` or `Chart.yaml`) of the chart you
