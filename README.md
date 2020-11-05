@@ -18,8 +18,8 @@ Make sure you have the following packages installed and configured:
 
 ### Step 1: Install additional R packages
 
-1. The current list of existing clusters use `repo2docker` to build the Docker
-image. In order to install new R packages, add them to their corespondig configuration
+1. The current list of existing clusters use [repo2docker](https://repo2docker.readthedocs.io/en/latest/)
+to build the Docker image. In order to install new R packages, add them to their corespondig configuration
 file: `<deployments/<hub-image>/image/install.R`
 
 2. The packages listed in the `install.R` file are installed using
@@ -27,17 +27,18 @@ file: `<deployments/<hub-image>/image/install.R`
 
 - Add the pkgs available on [Cran](https://cran.r-project.org) to the `cran_packages`
   list. These packages will be installed using `devtools::install_version`.
-- Add the pkgs that are only available on GitHub to the `github_packages` list/
+- Add the pkgs that are only available on GitHub to the `github_packages` list.
   These packages will be installed using `devtools::install_github`.
 
 3. Pin every package to their current versions, available on the
 [R Studio package manager](https://packagemanager.rstudio.com/client/#/repos/1/packages)
-or to a specific wanted version. If the package is only available on GitHub, pin to a GitHub commit hash.
+or to a specific wanted version. If the package is only available on GitHub, pin to a git commit hash.
 
 4. Build the Docker image locally and make sure everything is ok.
 
    ```bash
-      docker build . inside the image directory
+      # from inside the image directory
+      docker build .
    ```
 
 5. Commit the changes to git, for `hubploy build <hub-name> --push --check-registry` to work,
@@ -67,7 +68,7 @@ since the commit hash is used as the image tag.
 5. Build and push the Docker image with `hubploy`:
 
    ```bash
-      hubploy build ohw --check-registry --push
+      hubploy build <cluster-name> --check-registry --push
    ```
 
 6. Authenticate into the cluster:
@@ -97,3 +98,43 @@ since the commit hash is used as the image tag.
    ```bash
       hubploy deploy <hub-name> hub prod
    ```
+
+## How to use an unreleased helm chart
+
+Sometimes you might need to use the latest version of a helm chart and that isn't yet released.
+The following steps shows how to do so for the DaskHub project, but the pattern
+should be replicable for others.
+
+1. Clone the repo holding the latest version of the helm-chart and checkout the wanted branch:
+
+   *DaskHub example:*
+
+   ```bash
+      git clone https://github.com/dask/helm-chart.git
+      git checkout master
+   ```
+2. Inside the `yaml` file holding the dependencies, add the local path to the helm-chart of the project
+you just checked out and use the version inside the `chart.yaml` or run `chartpress` to generate one if
+that is not available:
+
+   *DaskHub example:*
+
+   ```bash
+      dependencies:
+       - name: daskhub
+         repository: file://<path-to-your-daskhub-checkout>/daskhub
+         version: <version-from-chart.yaml-of-daskhub>
+   ```
+
+3. Deploy the changes.
+
+   **Note** If after deploying these changes some of the services don't show up and they are part of projects that
+   are listed as dependencies of the project, this might mean they haven't been 'fetched' properly and you
+   should do that manually.
+
+      *DaskHub example:*
+
+      ```bash
+         # from inside the dask/helm-chart checkout
+         helm dep up daskhub
+      ```
