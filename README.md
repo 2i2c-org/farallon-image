@@ -110,9 +110,8 @@ should be replicable for others.
    *DaskHub example:*
 
    ```bash
-      git clone https://github.com/dask/helm-chart.git
-      git checkout master
-   ```
+   git clone https://github.com/dask/helm-chart.git
+   git checkout master
 2. Inside the `yaml` file holding the dependencies, add the local path to the helm-chart of the project
 you just checked out and use the version inside the `chart.yaml` or run `chartpress` to generate one if
 that is not available:
