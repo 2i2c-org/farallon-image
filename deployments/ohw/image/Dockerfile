@@ -68,7 +68,9 @@ RUN apt-get update && \
         libproj15 \
         libudunits2-0 \
         libxml2 \
-        libzmq5 > /dev/null
+        libzmq5 \
+        libglu1-mesa-dev \
+        libgl1-mesa-dev > /dev/null
 
 # Needed by RStudio
 RUN apt-get update -qq --yes && \

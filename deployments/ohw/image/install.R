@@ -52,7 +52,10 @@ cran_packages <- c(
   "rnaturalearthdata", "0.1.0",
   "viridis", "0.5.1",
   "adehabitatMA", "0.3.14",
-  "ncdf4", "1.17"
+  "ncdf4", "1.17",
+  "Information", "0.0.9",
+  "corrplot", "0.84",
+  "ClustOfVar", "1.1"
 )
 
 github_packages <- c(
