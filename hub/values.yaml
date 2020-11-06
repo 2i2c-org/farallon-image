@@ -1,6 +1,13 @@
 daskhub:
   jupyterhub:
     singleuser:
+      cloudMetadata:
+        enabled: true
+        # Don't block access to AWS cloud metadata
+        # If we don't, our users can't access S3 buckets / other AWS services
+        # without an explicit identity
+        # FIXME: Provide an explicit identity for users instead
+        blockWithIptables: false
       profileList:
         # The mem-guarantees are here so k8s doesn't schedule other pods
         # on these nodes.
