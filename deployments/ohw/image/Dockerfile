@@ -1,62 +1,21 @@
-FROM buildpack-deps:focal-scm
+FROM pangeo/pangeo-notebook:6b2df38
 
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+USER root
 ENV DEBIAN_FRONTEND=noninteractive
-ENV NB_USER jovyan
-ENV NB_UID 1000
-
-ENV CONDA_DIR /opt/conda
 ENV R_LIBS_USER /opt/r
 
-ENV PATH ${CONDA_DIR}/bin:$PATH
-
-RUN adduser --disabled-password --gecos "Default Jupyter user" ${NB_USER}
-#
 # Create user owned R libs dir
 # This lets users temporarily install packages
 RUN mkdir -p ${R_LIBS_USER} && chown ${NB_USER}:${NB_USER} ${R_LIBS_USER}
-
-# Install these without 'recommended' packages to keep image smaller.
-# Useful utils that folks sort of take for granted
-RUN apt-get update -qq --yes && \
-    apt-get install --yes --no-install-recommends -qq \
-        htop \
-        less \
-        man \
-        nano \
-        screen \
-        tar \
-        tmux \
-        wget \
-        vim \
-        locales > /dev/null
-
-RUN echo "${LC_ALL} UTF-8" > /etc/locale.gen && \
-    locale-gen
-
-# for nbconvert & notebook-to-pdf
-RUN apt-get update -qq --yes && \
-    apt-get install --yes -qq \
-        pandoc \
-        texlive-xetex \
-        texlive-fonts-recommended \
-        > /dev/null
-
-WORKDIR /home/jovyan
-
-COPY install-miniforge.bash /tmp/install-miniforge.bash
-RUN /tmp/install-miniforge.bash
-
 # Install R packages
 RUN apt-get update -qq --yes > /dev/null && \
     apt-get install --yes -qq \
+    curl \
     r-base \
     r-base-dev \
     r-recommended \
-    r-cran-littler > /dev/null
-#
+    r-cran-littler
+
 # Needed by many R libraries
 # Picked up from https://github.com/rocker-org/rocker/blob/9dc3e458d4e92a8f41ccd75687cd7e316e657cc0/r-rspm/focal/Dockerfile
 # Our pre-built R packages from rspm are built against system libs in focal
@@ -104,9 +63,6 @@ COPY rsession.conf /etc/rstudio/rsession.conf
 
 USER ${NB_USER}
 
-# FIXME: Split this into two files
-# We can then install things that require python / jupyter separate
-# from scientific python libs - speeding up image build times a lot
 COPY environment.yml /tmp/
 
 RUN conda env update -p ${CONDA_DIR} -f /tmp/environment.yml
