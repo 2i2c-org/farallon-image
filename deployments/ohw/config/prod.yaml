@@ -1,5 +1,10 @@
 jupyterhub-ssh:
   hubUrl: https://ohw.pangeo.2i2c.cloud
+  ssh:
+    service:
+      type: ClusterIP
+  sftp:
+    enabled: False
 daskhub:
   jupyterhub:
     hub:
