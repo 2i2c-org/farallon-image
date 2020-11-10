@@ -53,6 +53,12 @@ daskhub:
       state:
         enabled: True
     proxy:
+      service:
+         extraPorts:
+          - port: 22
+            targetPort: 8022
+            protocol: TCP
+            name: ssh
       https:
         enabled: true
       nodeSelector:
@@ -71,6 +77,29 @@ daskhub:
             memory: 256Mi
           limits:
             memory: 512Mi
+        networkPolicy:
+          # We can use 'ssh' instead of 8022 once we use the latest z2jh helm chart version
+          allowedIngressPorts: [http, https, 8022]
+        labels:
+          hub.jupyter.org/network-access-ssh-server: "true"
+          hub.jupyter.org/network-access-sftp-server: "true"
+        extraStaticConfig:
+          entryPoints:
+            ssh:
+              address: ':8022'
+        extraDynamicConfig:
+          tcp:
+            services:
+              ssh:
+                loadBalancer:
+                  servers:
+                    - address: jupyterhub-ssh:22
+            routers:
+              ssh-router:
+                entrypoints:
+                  - ssh
+                rule: 'HostSNI(`*`)'
+                service: ssh
     hub:
       allowNamedServers: true
       readinessProbe:

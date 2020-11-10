@@ -1,3 +1,10 @@
+jupyterhub-ssh:
+  hubUrl: https://farallon.2i2c.cloud
+  ssh:
+    service:
+      type: ClusterIP
+  sftp:
+    enabled: False
 daskhub:
   jupyterhub:
     hub:
