@@ -3,6 +3,14 @@
 
 A collection of JupyterHub deployments with hubploy by 2i2c.
 
+## Contents:
+
+1. **User documentation:**
+   * [How to ssh into your hub](#how-to-ssh-into-your-hub)
+2. **Admin documentation:**
+   * [How to deploy changes to an existing hub](#how-to-deploy-changes-to-an-existing-hub)
+   * [How to use an unreleased helm chart](#how-to-use-an-unreleased-helm-chart)
+
 ## How to deploy changes to an existing hub
 
 This section shows how to install new R packages and deploy the changes to a cluster.
@@ -136,3 +144,37 @@ just cloned changes.
       ```
 
 4. Deploy the changes.
+
+## How to ssh into your hub
+
+The OHW and Farallon hubs use the [`jupyterhub-ssh`](https://github.com/yuvipanda/jupyterhub-ssh) project, allowing straightforward SSH access into the hubs.
+To gain SSH access to your user environment in [OHW](https://ohw.pangeo.2i2c.cloud) or [Farallon](https://farallon.2i2c.cloud) hubs, follow the next steps:
+
+1. Login into your JupyterHub and go to the API token request page of the hub you want to SSH into:
+   * https://ohw.pangeo.2i2c.cloud/hub/token
+   * https://farallon.2i2c.cloud/hub/token
+
+2. Request a new API token and copy it.
+
+3. SSH into JupyterHub using the username you used to request a new token from the Hub and the Hub address:
+
+   ```bash
+    $ ssh <username-you-used-to-login>@ohw.pangeo.2i2c.cloud
+   ```
+   or:
+
+   ```bash
+    $ ssh <username-you-used-to-login>@farallon.2i2c.cloud
+   ```
+
+4. Enter the token received from JupyterHub as a password.
+
+   **Note**: If the Notebook server isn't running, `jupyterhub-ssh` will try to start it for you. But this takes a while.
+   If you get a timeout error about the server spawning process like this one:
+
+      ```bash
+      Starting your server...............................failed to start server on time!
+      ```
+   You should first start the notebook server from the JupyterHub page or try a few times, until the server starts.
+
+5. TADA :tada: Now you have an interactive terminal! You can do anything you would generally interactively do via ssh: run editors, fully interactive programs, use the commandline, etc. Some features like non-interactive command running, tunneling, etc are currently unavailable.
