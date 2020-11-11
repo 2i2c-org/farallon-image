@@ -5,7 +5,6 @@ on:
       # We run don't want a PR build for staging -> master PRs
       - prod
 
-
 jobs:
   build:
     name:
@@ -13,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: docker://yuvipanda/hubploy:202007031032027f6164
+      - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: test building image
         with:
-          args: build utoronto
+          args: build ohw
