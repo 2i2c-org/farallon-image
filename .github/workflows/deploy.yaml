@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: docker://yuvipanda/hubploy:202007031032027f6164
+      - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: unlock git-crypt secrets
         env:
           SOPS_GCP_DECRYPT_KEY: ${{ secrets.SOPS_GCP_DECRYPT_KEY }}
@@ -26,30 +26,30 @@ jobs:
           # We explicitly pass this env var only to steps that need it, so we
           # don't accidentally authenticate in places we don't need to.
           args: -c "echo ${SOPS_GCP_DECRYPT_KEY} >  sops-key.json"
-      - uses: docker://yuvipanda/hubploy:202007031032027f6164
+      - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: build & push image if needed
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "sops-key.json"
         with:
-          args: build utoronto --check-registry --push
-      - uses: docker://yuvipanda/hubploy:202007031032027f6164
+          args: build ohw --check-registry --push
+      - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: Setup Helm
         with:
           entrypoint: /bin/bash
-          args: -c "helm3 repo add jupyterhub https://jupyterhub.github.io/helm-chart/ && helm3 repo update"
-      - uses: docker://yuvipanda/hubploy:202007031032027f6164
+          args: -c "helm3 repo add dask https://helm.dask.org/ && helm3 repo add jupyterhub-ssh https://yuvipanda.github.io/jupyterhub-ssh/ && helm3 repo update"
+      - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: Deploy to staging
         if: github.ref == 'refs/heads/staging'
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "sops-key.json"
           HELM_EXECUTABLE: "helm3"
         with:
-          args: deploy utoronto hub staging
-      - uses: docker://yuvipanda/hubploy:202007031032027f6164
+          args: deploy ohw hub staging
+      - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: Deploy to prod
         if: github.ref == 'refs/heads/prod'
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "sops-key.json"
           HELM_EXECUTABLE: "helm3"
         with:
-          args: deploy utoronto hub prod
+          args: deploy ohw hub prod
