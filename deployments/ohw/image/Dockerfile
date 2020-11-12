@@ -3,7 +3,7 @@ FROM pangeo/pangeo-notebook:6b2df38
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
 ENV R_LIBS_USER /opt/r
-ENV PATH ${NB_PYTHON_PREFIX}/bin/bin:$PATH
+ENV PATH ${NB_PYTHON_PREFIX}/bin:$PATH
 
 # Create user owned R libs dir
 # This lets users temporarily install packages
