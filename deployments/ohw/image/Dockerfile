@@ -3,6 +3,7 @@ FROM pangeo/pangeo-notebook:6b2df38
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
 ENV R_LIBS_USER /opt/r
+ENV PATH ${NB_PYTHON_PREFIX}/bin/bin:$PATH
 
 # Create user owned R libs dir
 # This lets users temporarily install packages
@@ -65,14 +66,14 @@ USER ${NB_USER}
 
 COPY environment.yml /tmp/
 
-RUN conda env update -p ${CONDA_DIR} -f /tmp/environment.yml
+RUN conda env update --name ${CONDA_ENV} -f /tmp/environment.yml
 
 COPY install-jupyter-extensions.bash /tmp/install-jupyter-extensions.bash
 RUN /tmp/install-jupyter-extensions.bash
 
 # Install IRKernel
 RUN r -e "install.packages('IRkernel', version='1.1.1')" && \
-    r -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
+    r -e "IRkernel::installspec(prefix='${NB_PYTHON_PREFIX}')"
 
 # Install R packages, cleanup temp package download location
 COPY install.R /tmp/install.R
@@ -80,6 +81,6 @@ RUN /tmp/install.R && \
  	rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Set bash as shell in terminado.
-ADD jupyter_notebook_config.py  ${CONDA_PREFIX}/etc/jupyter/
+ADD jupyter_notebook_config.py  ${NB_PYTHON_PREFIX}/etc/jupyter/
 # Disable history.
-ADD ipython_config.py ${CONDA_PREFIX}/etc/ipython/
+ADD ipython_config.py ${NB_PYTHON_PREFIX}/etc/ipython/
