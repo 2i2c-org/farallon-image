@@ -68,7 +68,8 @@ COPY environment.yml /tmp/
 
 RUN conda env update --name ${CONDA_ENV} -f /tmp/environment.yml
 
-RUN conda remove nb_conda_kernels
+# Remove nb_conda_kernels from the env for now
+RUN conda remove -n ${CONDA_ENV} nb_conda_kernels
 
 COPY install-jupyter-extensions.bash /tmp/install-jupyter-extensions.bash
 RUN /tmp/install-jupyter-extensions.bash
