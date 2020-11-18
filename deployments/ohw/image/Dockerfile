@@ -30,7 +30,10 @@ RUN apt-get update && \
         libxml2 \
         libzmq5 \
         libglu1-mesa-dev \
-        libgl1-mesa-dev > /dev/null
+        libgl1-mesa-dev \
+        libglpk-dev \
+        libgmp3-dev \
+        libxml2-dev > /dev/null
 
 # Needed by RStudio
 RUN apt-get update -qq --yes && \
