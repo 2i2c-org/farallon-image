@@ -1,62 +1,22 @@
-FROM buildpack-deps:focal-scm
+FROM pangeo/pangeo-notebook:6b2df38
 
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+USER root
 ENV DEBIAN_FRONTEND=noninteractive
-ENV NB_USER jovyan
-ENV NB_UID 1000
-
-ENV CONDA_DIR /opt/conda
 ENV R_LIBS_USER /opt/r
+ENV PATH ${NB_PYTHON_PREFIX}/bin:$PATH
 
-ENV PATH ${CONDA_DIR}/bin:$PATH
-
-RUN adduser --disabled-password --gecos "Default Jupyter user" ${NB_USER}
-#
 # Create user owned R libs dir
 # This lets users temporarily install packages
 RUN mkdir -p ${R_LIBS_USER} && chown ${NB_USER}:${NB_USER} ${R_LIBS_USER}
-
-# Install these without 'recommended' packages to keep image smaller.
-# Useful utils that folks sort of take for granted
-RUN apt-get update -qq --yes && \
-    apt-get install --yes --no-install-recommends -qq \
-        htop \
-        less \
-        man \
-        nano \
-        screen \
-        tar \
-        tmux \
-        wget \
-        vim \
-        locales > /dev/null
-
-RUN echo "${LC_ALL} UTF-8" > /etc/locale.gen && \
-    locale-gen
-
-# for nbconvert & notebook-to-pdf
-RUN apt-get update -qq --yes && \
-    apt-get install --yes -qq \
-        pandoc \
-        texlive-xetex \
-        texlive-fonts-recommended \
-        > /dev/null
-
-WORKDIR /home/jovyan
-
-COPY install-miniforge.bash /tmp/install-miniforge.bash
-RUN /tmp/install-miniforge.bash
-
 # Install R packages
 RUN apt-get update -qq --yes > /dev/null && \
     apt-get install --yes -qq \
+    curl \
     r-base \
     r-base-dev \
     r-recommended \
-    r-cran-littler > /dev/null
-#
+    r-cran-littler
+
 # Needed by many R libraries
 # Picked up from https://github.com/rocker-org/rocker/blob/9dc3e458d4e92a8f41ccd75687cd7e316e657cc0/r-rspm/focal/Dockerfile
 # Our pre-built R packages from rspm are built against system libs in focal
@@ -70,7 +30,10 @@ RUN apt-get update && \
         libxml2 \
         libzmq5 \
         libglu1-mesa-dev \
-        libgl1-mesa-dev > /dev/null
+        libgl1-mesa-dev \
+        libglpk-dev \
+        libgmp3-dev \
+        libxml2-dev > /dev/null
 
 # Needed by RStudio
 RUN apt-get update -qq --yes && \
@@ -104,19 +67,19 @@ COPY rsession.conf /etc/rstudio/rsession.conf
 
 USER ${NB_USER}
 
-# FIXME: Split this into two files
-# We can then install things that require python / jupyter separate
-# from scientific python libs - speeding up image build times a lot
 COPY environment.yml /tmp/
 
-RUN conda env update -p ${CONDA_DIR} -f /tmp/environment.yml
+RUN conda env update --name ${CONDA_ENV} -f /tmp/environment.yml
+
+# Remove nb_conda_kernels from the env for now
+RUN conda remove -n ${CONDA_ENV} nb_conda_kernels
 
 COPY install-jupyter-extensions.bash /tmp/install-jupyter-extensions.bash
 RUN /tmp/install-jupyter-extensions.bash
 
 # Install IRKernel
 RUN r -e "install.packages('IRkernel', version='1.1.1')" && \
-    r -e "IRkernel::installspec(prefix='${CONDA_DIR}')"
+    r -e "IRkernel::installspec(prefix='${NB_PYTHON_PREFIX}')"
 
 # Install R packages, cleanup temp package download location
 COPY install.R /tmp/install.R
@@ -124,6 +87,6 @@ RUN /tmp/install.R && \
  	rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Set bash as shell in terminado.
-ADD jupyter_notebook_config.py  ${CONDA_PREFIX}/etc/jupyter/
+ADD jupyter_notebook_config.py  ${NB_PYTHON_PREFIX}/etc/jupyter/
 # Disable history.
-ADD ipython_config.py ${CONDA_PREFIX}/etc/ipython/
+ADD ipython_config.py ${NB_PYTHON_PREFIX}/etc/ipython/

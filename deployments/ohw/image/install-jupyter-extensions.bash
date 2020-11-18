@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 jupyter labextension install --debug \
     @jupyter-widgets/jupyterlab-manager@2 \
