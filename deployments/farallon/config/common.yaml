@@ -8,6 +8,10 @@ daskhub:
   jupyterhub:
     auth:
       type: github
+      github:
+        orgWhitelist:
+          - "farallon-2i2c"
+          - "2i2c-org"
       dummy:
         password: watwatwat
     proxy:
