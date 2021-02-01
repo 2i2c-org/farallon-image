@@ -15,4 +15,4 @@ jobs:
       - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: test building image
         with:
-          args: build ohw
+          args: build farallon

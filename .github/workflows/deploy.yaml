@@ -31,7 +31,7 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "sops-key.json"
         with:
-          args: build ohw --check-registry --push
+          args: build farallon --check-registry --push
       - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: Setup Helm
         with:
@@ -44,7 +44,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: "sops-key.json"
           HELM_EXECUTABLE: "helm3"
         with:
-          args: deploy ohw hub staging
+          args: deploy farallon hub staging
       - uses: docker://yuvipanda/hubploy:202010152122355b4443
         name: Deploy to prod
         if: github.ref == 'refs/heads/prod'
@@ -52,4 +52,4 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: "sops-key.json"
           HELM_EXECUTABLE: "helm3"
         with:
-          args: deploy ohw hub prod
+          args: deploy farallon hub prod
