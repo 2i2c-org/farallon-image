@@ -67,18 +67,18 @@ github_packages <- c(
   "3wen/legendMap", "707f00ccdc494ce3aefead7abdf0d294bd6774df"
 )
 
+for (i in seq(1, length(cran_packages), 2)) {
+  devtools::install_version(
+    cran_packages[i],
+    version = cran_packages[i + 1]
+  )
+}
+
 devtools::install_version("INLA", "20.03.17", repos=c(getOption("repos"), INLA="https://inla.r-inla-download.org/R/stable"))
 
 for (i in seq(1, length(github_packages), 2)) {
   devtools::install_github(
     github_packages[i],
     ref = github_packages[i + 1]
-  )
-}
-
-for (i in seq(1, length(cran_packages), 2)) {
-  devtools::install_version(
-    cran_packages[i],
-    version = cran_packages[i + 1]
   )
 }
