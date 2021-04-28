@@ -1,0 +1,164 @@
+apiVersion: kops.k8s.io/v1alpha2
+kind: Cluster
+metadata:
+  creationTimestamp: "2021-02-13T23:25:11Z"
+  name: farallon-2i2c.k8s.local
+spec:
+  clusterAutoscaler:
+    enabled: true
+  api:
+    loadBalancer:
+      class: Classic
+      type: Public
+  authorization:
+    rbac: {}
+
+  dns:
+    kubeDNS:
+      provider: CoreDNS
+  channel: stable
+  cloudProvider: aws
+  configBase: s3://2i2c-farallon-pangeo-kops/farallon-2i2c.k8s.local
+  containerRuntime: docker
+  etcdClusters:
+  - cpuRequest: 200m
+    etcdMembers:
+    - instanceGroup: master-us-east-2a
+      name: a
+    memoryRequest: 100Mi
+    name: main
+  - cpuRequest: 100m
+    etcdMembers:
+    - instanceGroup: master-us-east-2a
+      name: a
+    memoryRequest: 100Mi
+    name: events
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  kubelet:
+    anonymousAuth: false
+    featureGates:
+      LegacyNodeRoleBehavior: "false"
+      ServiceNodeExclusion: "false"
+  kubeControllerManager:
+    featureGates:
+      LegacyNodeRoleBehavior: "false"
+      ServiceNodeExclusion: "false"
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  kubernetesVersion: 1.19.7
+  masterPublicName: api.farallon-2i2c.k8s.local
+  networkCIDR: 172.20.0.0/16
+  networking:
+    calico:
+      majorVersion: v3
+  nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  subnets:
+  - cidr: 172.20.32.0/19
+    name: us-east-2a
+    type: Public
+    zone: us-east-2a
+  topology:
+    dns:
+      type: Public
+    masters: public
+    nodes: public
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2021-02-13T23:25:12Z"
+  labels:
+    kops.k8s.io/cluster: farallon-2i2c.k8s.local
+  name: master-us-east-2a
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210119.1
+  machineType: t3.medium
+  maxSize: 1
+  minSize: 0
+  nodeLabels:
+    kops.k8s.io/instancegroup: master-us-east-2a
+  role: Master
+  subnets:
+  - us-east-2a
+
+---
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  labels:
+    kops.k8s.io/cluster: farallon-2i2c.k8s.local
+    hub.jupyter.org/pool-name: notebook-m5-xlarge
+  name: notebook-m5-xlarge-2021-02-15
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210119.1
+  cloudLabels:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/pool-name: notebook-pool-m5-xlarge
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org/dedicated: user:NoSchedule
+  taints:
+   - hub.jupyter.org_dedicated=user:NoSchedule
+   - hub.jupyter.org/dedicated=user:NoSchedule
+  nodeLabels:
+    hub.jupyter.org/pool-name: notebook-m5-xlarge
+  machineType: m5.xlarge
+  maxSize: 20
+  minSize: 0
+  role: Node
+  subnets:
+  - us-east-2a
+---
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  labels:
+    kops.k8s.io/cluster: farallon-2i2c.k8s.local
+    hub.jupyter.org/pool-name: notebook-m5-2xlarge
+  name: notebook-m5-2xlarge-2021-02-15
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210119.1
+  cloudLabels:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/pool-name: notebook-pool-m5-2xlarge
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org_dedicated: user:NoSchedule
+      k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org/dedicated: user:NoSchedule
+  taints:
+   - hub.jupyter.org_dedicated=user:NoSchedule
+   - hub.jupyter.org/dedicated=user:NoSchedule
+  nodeLabels:
+    hub.jupyter.org/pool-name: notebook-m5-2xlarge
+  machineType: m5.2xlarge
+  maxSize: 20
+  minSize: 0
+  role: Node
+  subnets:
+  - us-east-2a
+---
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  labels:
+    kops.k8s.io/cluster: farallon-2i2c.k8s.local
+    hub.jupyter.org/pool-name: dask-worker
+  name: dask-worker-2021-02-15
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20210119.1
+  cloudLabels:
+      k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/pool-name: dask-worker
+      k8s.io/cluster-autoscaler/node-template/taint/k8s.dask.org_dedicated: worker:NoSchedule
+      k8s.io/cluster-autoscaler/node-template/taint/k8s.dask.org/dedicated: worker:NoSchedule
+  taints:
+   - k8s.dask.org_dedicated=worker:NoSchedule
+   - k8s.dask.org/dedicated=worker:NoSchedule
+  nodeLabels:
+    hub.jupyter.org/pool-name: dask-worker
+  machineType: m5.2xlarge
+  maxSize: 50
+  minSize: 0
+  role: Node
+  subnets:
+  - us-east-2a
