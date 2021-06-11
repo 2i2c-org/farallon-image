@@ -2,7 +2,7 @@
 github_packages <- c(
   "James-Thorson-NOAA/FishStatsUtils", "2.8.0",
   "james-thorson/EOFR", "d3ebd884e3483645a029cdf092cff986f5d8b24a",
-  "James-Thorson-NOAA/VAST", "0f7abfeed6eab96a7967cabe7f2e88a9375cef2f",
+  "James-Thorson-NOAA/VAST", "3.7.1",
   "3wen/legendMap", "707f00ccdc494ce3aefead7abdf0d294bd6774df"
 )
 
