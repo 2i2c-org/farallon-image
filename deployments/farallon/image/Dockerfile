@@ -33,6 +33,7 @@ RUN apt-get update && \
         libgl1-mesa-dev \
         libglpk-dev \
         libgmp3-dev \
+        libssl-dev \
         libxml2-dev > /dev/null
 
 # Needed by RStudio
