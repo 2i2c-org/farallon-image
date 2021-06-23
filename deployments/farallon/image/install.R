@@ -16,8 +16,8 @@ cran_packages <- c(
   "reticulate", "1.16",
   "shiny", "1.5.0",
   "itsadug", "2.3",
-  # TMB needs at least 1.3-2 version of Matrix
-  "Matrix", "1.3-2",
+  # TMB needs at least 1.3-4 version of Matrix
+  "Matrix", "1.3-4",
   "TMB", "1.7.18",
   "car", "3.0-10",
   "lme4", "1.1-25",
