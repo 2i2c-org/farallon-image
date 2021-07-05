@@ -1,0 +1,25 @@
+name: Build container image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: checkout files in repo
+      uses: actions/checkout@main
+
+    - name: update jupyter dependencies with repo2docker
+      uses: jupyterhub/repo2docker-action@master
+      with: # make sure username & password/token matches your registry
+        DOCKER_USERNAME: ${{ secrets.QUAY_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+        DOCKER_REGISTRY: "quay.io"
+        IMAGE_NAME: 2i2c/farallon
+        # Special `start` file is required at runtime, so can't put them in /home/jovyan
+        # This puts contents of this repo to /srv/repo, so `start` can be present during container runtime
+        REPO_DIR: /srv/repo

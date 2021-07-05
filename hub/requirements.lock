@@ -1,9 +1,0 @@
-dependencies:
-- name: daskhub
-  repository: https://helm.dask.org
-  version: 4.5.4
-- name: jupyterhub-ssh
-  repository: https://yuvipanda.github.io/jupyterhub-ssh/
-  version: 0.0.1-n062.h2759fb4
-digest: sha256:9a762923cb0c4b2722826a8ad6af8a49a4efd08f18e33c64724703a6684fdcd5
-generated: "2020-11-09T12:11:42.629491843+02:00"
