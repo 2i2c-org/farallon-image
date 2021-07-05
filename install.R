@@ -57,7 +57,9 @@ cran_packages <- c(
   "ncdf4", "1.17",
   "Information", "0.0.9",
   "corrplot", "0.84",
-  "ClustOfVar", "1.1"
+  "ClustOfVar", "1.1",
+  # From https://github.com/2i2c-org/pilot/issues/79
+  "lwgeom", "0.2-6"
 )
 
 for (i in seq(1, length(cran_packages), 2)) {
