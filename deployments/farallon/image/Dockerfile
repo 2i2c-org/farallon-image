@@ -87,6 +87,11 @@ COPY install.R /tmp/install.R
 RUN /tmp/install.R && \
  	rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
+COPY install-github.R /tmp/install-github.R
+RUN /tmp/install-github.R && \
+ 	rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+
 # Set bash as shell in terminado.
 ADD jupyter_notebook_config.py  ${NB_PYTHON_PREFIX}/etc/jupyter/
 # Disable history.
