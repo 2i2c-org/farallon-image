@@ -16,7 +16,7 @@ jobs:
       with: # make sure username & password/token matches your registry
         NO_PUSH: "true"
         DOCKER_REGISTRY: "quay.io"
-        IMAGE_NAME: 2i2c/farallon
+        IMAGE_NAME: 2i2c/farallon-image
         # Special `start` file is required at runtime, so can't put them in /home/jovyan
         # This puts contents of this repo to /srv/repo, so `start` can be present during container runtime
         REPO_DIR: /srv/repo
