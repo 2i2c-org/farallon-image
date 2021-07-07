@@ -11,8 +11,7 @@ RUN mkdir -p ${R_LIBS_USER} && chown ${NB_USER}:${NB_USER} ${R_LIBS_USER}
 
 # Needed for apt-key to work
 RUN apt-get update -qq --yes > /dev/null && \
-    apt-get install --yes -qq \
-    gnupg2
+    apt-get install --yes -qq gnupg2 > /dev/null
 
 # Install R packages
 # Our pre-built R packages from rspm are built against system libs in focal
@@ -22,12 +21,11 @@ RUN apt-get update -qq --yes > /dev/null && \
 ENV R_VERSION=4.0.5-1.2004.0
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc/apt/sources.list.d/cran.list
+# Packages we want are installed with R, so we use apt to *just* get R
 RUN apt-get update -qq --yes > /dev/null && \
-    apt-get install --yes -qq \
-    r-base=${R_VERSION} \
-    r-base-dev=${R_VERSION} \
-    r-recommended=${R_VERSION} \
-    r-cran-littler > /dev/null
+    apt-get install --yes \
+    r-base-core=${R_VERSION} \
+    r-base-dev=${R_VERSION} > /dev/null
 
 # Needed by many R libraries
 # Picked up from https://github.com/rocker-org/rocker/blob/9dc3e458d4e92a8f41ccd75687cd7e316e657cc0/r-rspm/focal/Dockerfile
