@@ -8,25 +8,36 @@ ENV PATH ${NB_PYTHON_PREFIX}/bin:$PATH
 # Create user owned R libs dir
 # This lets users temporarily install packages
 RUN mkdir -p ${R_LIBS_USER} && chown ${NB_USER}:${NB_USER} ${R_LIBS_USER}
-# Install R packages
+
+# Needed for apt-key to work
 RUN apt-get update -qq --yes > /dev/null && \
     apt-get install --yes -qq \
-    curl \
-    r-base \
-    r-base-dev \
-    r-recommended \
-    r-cran-littler
+    gnupg2
+
+# Install R packages
+# Our pre-built R packages from rspm are built against system libs in focal
+# rstan takes forever to compile from source, and needs libnodejs
+# So we install older (10.x) nodejs from apt rather than newer from conda
+# We don't want R 4.1 yet, so we pin to R 4.0.5
+ENV R_VERSION=4.0.5-1.2004.0
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc/apt/sources.list.d/cran.list
+RUN apt-get update -qq --yes > /dev/null && \
+    apt-get install --yes -qq \
+    r-base=${R_VERSION} \
+    r-base-dev=${R_VERSION} \
+    r-recommended=${R_VERSION} \
+    r-cran-littler > /dev/null
 
 # Needed by many R libraries
 # Picked up from https://github.com/rocker-org/rocker/blob/9dc3e458d4e92a8f41ccd75687cd7e316e657cc0/r-rspm/focal/Dockerfile
 # Our pre-built R packages from rspm are built against system libs in focal
 # Some were required for lwgeom https://packagemanager.rstudio.com/client/#/repos/1/packages/lwgeom
 # libzmq3 is needed by IRKernel
-RUN apt-get update && \
+RUN apt-get update > /dev/null && \
     apt-get install -y --no-install-recommends \
         libgdal26 \
         libgeos-3.8.0 \
-        libproj15 \
         libudunits2-0 \
         libxml2 \
         libzmq5 \
@@ -51,10 +62,9 @@ RUN apt-get update -qq --yes && \
         lsb-release \
         libclang-dev  > /dev/null
 
-# Set path where R packages are installed
 # Download and install rstudio manually
 # Newer one has bug that doesn't work with jupyter-rsession-proxy
-ENV RSTUDIO_URL https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.2.5042-amd64.deb
+ENV RSTUDIO_URL https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.3.959-amd64.deb
 RUN curl --silent --location --fail ${RSTUDIO_URL} > /tmp/rstudio.deb && \
     dpkg -i /tmp/rstudio.deb && \
     rm /tmp/rstudio.deb
