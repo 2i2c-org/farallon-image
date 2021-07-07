@@ -20,6 +20,7 @@ RUN apt-get update -qq --yes > /dev/null && \
 # Needed by many R libraries
 # Picked up from https://github.com/rocker-org/rocker/blob/9dc3e458d4e92a8f41ccd75687cd7e316e657cc0/r-rspm/focal/Dockerfile
 # Our pre-built R packages from rspm are built against system libs in focal
+# Some were required for lwgeom https://packagemanager.rstudio.com/client/#/repos/1/packages/lwgeom
 # libzmq3 is needed by IRKernel
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -31,6 +32,11 @@ RUN apt-get update && \
         libzmq5 \
         libglu1-mesa-dev \
         libgl1-mesa-dev \
+        libudunits2-dev \
+        libgdal-dev \
+        gdal-bin \
+        libgeos-dev \
+        libproj-dev \
         libglpk-dev \
         libgmp3-dev \
         libssl-dev \
