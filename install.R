@@ -9,7 +9,7 @@ install.packages("devtools")
 # need and what is avaialble in the deb repos
 versioned_packages = c(
   "sf", "0.9-8",
-  "lwgeom", "0.2-6"
+  "lwgeom", "0.2-5"
  )
 
 for (i in seq(1, length(versioned_packages), 2)) {
