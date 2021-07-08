@@ -25,7 +25,8 @@ RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/" > /etc
 RUN apt-get update -qq --yes > /dev/null && \
     apt-get install --yes \
     r-base-core=${R_VERSION} \
-    r-base-dev=${R_VERSION} > /dev/null
+    r-base-dev=${R_VERSION} \
+    r-cran-littler > /dev/null
 
 # Needed by many R libraries
 # Picked up from https://github.com/rocker-org/rocker/blob/9dc3e458d4e92a8f41ccd75687cd7e316e657cc0/r-rspm/focal/Dockerfile
